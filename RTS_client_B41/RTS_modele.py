@@ -10,6 +10,7 @@ import math
 import time
 
 
+
 class SiteConstruction():
     def __init__(self, parent, id, x, y, sorte):
         self.parent = parent
