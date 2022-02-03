@@ -70,7 +70,7 @@ class Vue():
     def creer_cadre_splash(self, urlserveur: str, monnom: str, testdispo: str) -> Frame:
         self.cadresplash = Frame(self.cadreapp)
         # un canvas est utilisé pour 'dessiner' les widgets de cette fenêtre voir 'create_window' plus bas
-        self.canevassplash = Canvas(self.cadresplash, width=600, height=480, bg="wheat1")
+        self.canevassplash = Canvas(self.cadresplash, width=600, height=480, bg="pink")
         self.canevassplash.pack()
 
         # creation ds divers widgets (champ de texte 'Entry' et boutons cliquables (Button)
