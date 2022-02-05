@@ -211,7 +211,7 @@ def boucler_sur_jeu():
 
 if __name__ == '__main__':
     #dbman=Dbman()
-    app.run(debug=True,port=7000)
+    app.run(debug=True,port=8000)
 
 
 

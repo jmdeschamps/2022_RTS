@@ -381,7 +381,8 @@ class Vue():
     def reset_partie(self):
         rep=self.parent.reset_partie()
 
-    def initialiser_avec_modele(self):
+    def initialiser_avec_modele(self,modele):
+        self.modele=modele
         # on reassigne le nom final localement pour eviter
         # de toujours le requerir du parent
         self.monnom=self.parent.monnom
