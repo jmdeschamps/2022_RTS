@@ -135,7 +135,8 @@ class Vue():
         self.btninscrirejoueur.config(state=NORMAL)
         self.btncreerpartie.config(state=NORMAL)
         self.btnreset.config(state=NORMAL)
-        self.parent.boucler_sur_splash()
+        url_serveur=self.urlsplash.get()
+        self.parent.connecter_serveur(url_serveur)
 
     def creer_cadre_lobby(self):
         # le cadre lobby, pour isncription des autres joueurs, remplace le splash

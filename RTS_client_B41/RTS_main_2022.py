@@ -20,47 +20,29 @@ module principal (main), essentiellement le controleur, dans l'architecture M-V-
 
 class Controleur():
     def __init__(self):
-        # indique si on 'cree' la partie, c'est alors nous qui pourrons Demarrer la pertie
-        self.joueur_createur=0 
-        # le no de cadre pour assurer la syncronisation avec les autres participants
-        # cette variable est gerer par la boucle de jeu (bouclersurjeu)
-        self.cadrejeu=0    
-        # la liste de mes actions a envoyer au serveur, rempli par les actions du joueur AFFECTANT le jeu                 
-        self.actionsrequises=[] 
-        
-        # cette variable INDENTIFIE les joueurs dans le jeu IMPORTANT            
-        # createur automatique d'un nom de joueur, pour faciliter les tests (pas besoin d'inscrire un chaque fois)
-        # NOTE la fonction ne garantie pas l'unicite des noms - probleme en cas de conflit - non traite pour l'instant
-        self.monnom=self.generer_nom()
-        # la variable donnant acces au jeu pour le controleur, cree lorsque la partie est initialise (initialiserpartie)
-        self.modele=None
-        # liste des noms de joueurs pour le lobby
-        self.joueurs=[]
-        # requis pour sortir de cette boucle et passer au lobby du jeu
-        self.prochainsplash=None
-        # indicateur que le jeu se poursuive - sinon on attend qu'un autre joeur nous rattrape
-        self.onjoue=1
-        # delai en ms de la boucle de jeu
-        self.maindelai=50
-        # frequence des appel au serveur, evite de passer son temps a communiquer avec le serveur
-        self.moduloappeler_serveur=5
-        
-        # adresses du URL du serveur de jeu, adresse 127.0.0.1 est pour des tests avec un serveur local... utile pour tester
-        #self.urlserveur = "http://jmdeschamps.pythonanywhere.com"
-        self.urlserveur = "http://127.0.0.1:8000"
+        self.monnom=self.generer_nom()  # nom de joueur, sert d'identifiant dans le jeu - ici, avec auto-generation
 
-        # creation de la l'objet vue pour l'affichage et les controles du jeu
+        self.joueur_createur=0      # 1 quand un joueur "Créer une partie", peut Demarrer la partie
+        self.cadrejeu=0             # compte les tours dans la boucle de jeu (bouclersurjeu)
+        self.actionsrequises=[]     # les actions envoyées au serveur
+        self.joueurs=[] # liste des noms de joueurs pour le lobby
 
-        testdispo = self.tester_etat_serveur()
-        print(testdispo)
-        self.vue=Vue(self,self.urlserveur,self.monnom,testdispo[0])
-        # requiert l'affichage initiale du splash screen (fenetre initiale de l'application)
-        #####self.vue.changercadre("splash")
-        # lancement de la communication avec les serveur
-        #self.boucler_sur_splash()
-        # demarrage de la boucle evenementielle du logiciel
-        # cette boucle gere les evenements (souris, click, clavier)
-        self.vue.root.mainloop()
+        self.prochainsplash=None    # requis pour sortir de cette boucle et passer au lobby du jeu
+        self.onjoue=1               # indicateur que le jeu se poursuive - sinon on attend qu'un autre joueur nous rattrape
+        self.maindelai=50           # delai en ms de la boucle de jeu
+        self.moduloappeler_serveur=5  # frequence des appel au serveur, evite de passer son temps a communiquer avec le serveur
+        self.urlserveur = "http://127.0.0.1:8000" # 127.0.0.1 pour tests,"http://votreidentifiant.pythonanywhere.com" pour web
+
+        self.modele=None # la variable contenant la partie, après initialiserpartie()
+        self.vue=Vue(self,self.urlserveur,self.monnom,"Non connecté")  # la vue pour l'affichage et les controles du jeu
+
+        self.vue.root.mainloop() # la boucle des evenements (souris, click, clavier)
+
+    def connecter_serveur(self,url_serveur):
+        # self.urlserveur = "http://votreidentifiant.pythonanywhere.com" # adresses du URL du serveur de jeu
+        self.urlserveur = url_serveur #"http://127.0.0.1:8000"  # adresse 127.0.0.1 est pour des tests
+
+        self.boucler_sur_splash()
 
     # methode speciale pour remettre les parametres du serveur a leurs valeurs par defaut (jeu disponible, pas de joueur)
     # indique le resultat dans le splash
