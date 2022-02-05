@@ -39,9 +39,7 @@ class Controleur():
         self.vue.root.mainloop() # la boucle des evenements (souris, click, clavier)
 
     def connecter_serveur(self,url_serveur):
-        # self.urlserveur = "http://votreidentifiant.pythonanywhere.com" # adresses du URL du serveur de jeu
-        self.urlserveur = url_serveur #"http://127.0.0.1:8000"  # adresse 127.0.0.1 est pour des tests
-
+        self.urlserveur = url_serveur # le dernier avant le clic
         self.boucler_sur_splash()
 
     # methode speciale pour remettre les parametres du serveur a leurs valeurs par defaut (jeu disponible, pas de joueur)
@@ -49,7 +47,6 @@ class Controleur():
     def reset_partie(self):
         leurl=self.urlserveur+"/reset_jeu"
         reptext = self.appeler_serveur(leurl, 0)
-
         self.vue.update_splash(reptext[0][0])
         return reptext
         
@@ -59,10 +56,7 @@ class Controleur():
     # courante= la partie est en cours, on ne peut plus se connecter
     def tester_etat_serveur(self):
         leurl=self.urlserveur+"/tester_jeu"
-
         repdecode = self.appeler_serveur(leurl, None)[0]
-
-        print(repdecode)
         if "dispo" in repdecode:
             return ["dispo",repdecode]
         elif "attente" in repdecode:
@@ -72,46 +66,48 @@ class Controleur():
         else:
             return "impossible"
     
-    # a partir du splash, permet de creer une partie (lance le lobby pour permettre a d'autres joueurs de se connecter)
-    # l'argument valciv n'est pas utilise pour l'INSTANT, elle sert de recette pour envoyer des parameters lors de la demande de creation d'une partie
-    # on pourrait ainsi deja fournir des options de jeu
+    # a partir du splash
     def creer_partie(self,nom,urljeu):
-        if self.prochainsplash:
+        # on quitte le splash et sa boucle
+        if self.prochainsplash: # si on est dans boucler_sur_splash, on doit supprimer le prochain appel
             self.vue.root.after_cancel(self.prochainsplash)
             self.prochainsplash=None
-        if nom:
+        if nom: # si c'est pas None c'est un nouveau nom
             self.monnom=nom
+        # on avertit le serveur qu'on cree une partie
         url = self.urlserveur+"/creer_partie"
         params = {"nom": self.monnom}
         reptext=self.appeler_serveur(url,params)
-        self.joueur_createur=1
+
+        self.joueur_createur=1 # on est le createur
         self.vue.root.title("je suis "+self.monnom)
+        # on passe au lobby pour attendre les autres joueurs
         self.vue.changer_cadre("lobby")
         self.boucler_sur_lobby()
             
-    # permettre a un joueur de s'inscrire a une partie creer (mais non lancer...)
-    # transporter alors dans le lobby, en attente du lancement de la partie
-    # le joueur peut aussi choisir une option 
+    # un joueur s'inscrit à la partie, similaire à creer_partie
     def inscrire_joueur(self,nom,urljeu):
+        # on quitte le splash et sa boucle
         if self.prochainsplash:
             self.vue.root.after_cancel(self.prochainsplash)
             self.prochainsplash=None
         if nom:
             self.monnom=nom
+        # on s'inscrit sur le serveur
         url = self.urlserveur+"/inscrire_joueur"
         params = {"nom": self.monnom}
         reptext=self.appeler_serveur(url,params)
+
         self.vue.root.title("je suis "+self.monnom)
         self.vue.changer_cadre("lobby")
         self.boucler_sur_lobby()
     
-    # e partir du lobby, le createur de la partie peut lancer la partie
+    # a partir du lobby, le createur de la partie peut lancer la partie
     # fournissant des options (ici nbrIA) uniquement accessible au createur
     # lors que le createur voit tous ses joueurs esperes insrit il peut (seul d'ailleurs) lancer la partie
     # cette methode ne fait que changer l'etat de la partie sur le serveur pour le mettre a courant
     # lorsque chaque joueur recevra cet etat la partie sera initialiser et demarrer localement pour chacun
     def lancer_partie(self):
-        ## au lancement le champ 'champnbtIA' du lobby est lu...
         url = self.urlserveur+"/lancer_partie"
         params = {"nom": self.monnom}
         reptext=self.appeler_serveur(url,params)
