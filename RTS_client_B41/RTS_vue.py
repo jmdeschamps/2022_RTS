@@ -366,7 +366,7 @@ class Vue():
         self.listelobby.delete(0,END)
         for i in dico:
             self.listelobby.insert(END,i[0])
-        if self.parent.egoserveur:
+        if self.parent.joueur_createur:
             self.btnlancerpartie.config(state=NORMAL)
 
     def inscrire_joueur(self):

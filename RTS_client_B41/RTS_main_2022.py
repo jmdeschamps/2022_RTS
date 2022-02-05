@@ -20,9 +20,8 @@ module principal (main), essentiellement le controleur, dans l'architecture M-V-
 
 class Controleur():
     def __init__(self):
-        #self.civilisation="1"
-        # indique si on 'cree' la partie, c'est alors nous qui pourront Demarre la pertie
-        self.egoserveur=0 
+        # indique si on 'cree' la partie, c'est alors nous qui pourrons Demarrer la pertie
+        self.joueur_createur=0 
         # le no de cadre pour assurer la syncronisation avec les autres participants
         # cette variable est gerer par la boucle de jeu (bouclersurjeu)
         self.cadrejeu=0    
@@ -103,7 +102,7 @@ class Controleur():
         url = self.urlserveur+"/creer_partie"
         params = {"nom": self.monnom}
         reptext=self.appeler_serveur(url,params)
-        self.egoserveur=1
+        self.joueur_createur=1
         self.vue.root.title("je suis "+self.monnom)
         self.vue.changer_cadre("lobby")
         self.boucler_sur_lobby()
