@@ -823,24 +823,20 @@ class Joueur():
                                  "aureus": 888888888},
                   }
 
-    def __init__(self, parent, id, nom, couleur, x, y, civ):
+    def __init__(self, parent, id, nom, couleur, x, y):
         self.parent = parent
         self.nom = nom
         self.id = id
         self.x = x
         self.y = y
-        self.civilisation = civ
         self.couleur = couleur
         self.monchat = []
         self.chatneuf = 0
         self.ressourcemorte = []
-        if self.civilisation != "1":
-            self.ressources = Joueur.ressources[self.civilisation]
-        else:
-            self.ressources = {"nourriture": 200,
-                               "arbre": 200,
-                               "roche": 200,
-                               "aureus": 200}
+        self.ressources = {"nourriture": 200,
+                           "arbre": 200,
+                           "roche": 200,
+                           "aureus": 200}
         self.persos = {"ouvrier": {},
                        "soldat": {},
                        "archer": {},
@@ -1181,7 +1177,7 @@ class Partie():
                 y = random.randrange(quad[0][1] + bord, quad[1][1] - bord)
                 case = self.trouver_case(x, y)
                 if case.montype == "plaine":
-                    self.joueurs[i] = Joueur(self, id, i, coul, x, y, self.parent.civilisation)
+                    self.joueurs[i] = Joueur(self, id, i, coul, x, y)
                     n = 0
 
     def deplacer(self):
