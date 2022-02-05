@@ -121,14 +121,15 @@ class Vue():
         # self.canevassplash.create_window(220, 470, window=radciv5, width=180, height=30)
         # ## FIN de l'exemple des choix de civilisations
 
-        # on met à jour les champs et widgets
         # on retourne ce cadre pour l'insérer dans le dictionnaires des cadres
         return self.cadresplash
 
+    # cette fonction la creation d'un frame par un autre module - pour fin de test uniquement
     def montrercadretest(self):
         self.cadretest=RTS_vuecadres.Cadre_test(self)
         print(self.cadretest.nom)
         self.cadretest.grid(in_=self.canevas,row=0,column=0)
+    # fin fonction test pour auttre module
 
     def boucler_sur_splash(self):
         self.btninscrirejoueur.config(state=NORMAL)
