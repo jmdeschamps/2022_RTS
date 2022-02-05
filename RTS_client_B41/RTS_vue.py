@@ -92,12 +92,16 @@ class Vue():
         self.btncreerpartie = Button(text="Creer partie", font=("Arial", 12), state=DISABLED, command=self.creer_partie)
         self.btninscrirejoueur = Button(text="Inscrire joueur", font=("Arial", 12), state=DISABLED, command=self.inscrire_joueur)
         self.btnreset = Button(text="Reinitialiser partie", font=("Arial", 9), state=DISABLED, command=self.reset_partie)
-        self.btncadretest = Button(text="Cadre test", font=("Arial", 9),  command=self.montrercadretest)
-        # on place les boutons
+
+        ### NOTE le bouton suivant permet de générer un Frame issu d'un autre module et l'intégrer à la vue directement
+        #self.btncadretest = Button(text="Cadre test", font=("Arial", 9),  command=self.montrercadretest)
+        # on place les autres boutons
+        # self.canevassplash.create_window(120, 450, window=self.btncadretest, width=200, height=30)
+
+        # on place les autres boutons
         self.canevassplash.create_window(420, 350, window=self.btncreerpartie, width=200, height=30)
         self.canevassplash.create_window(420, 400, window=self.btninscrirejoueur, width=200, height=30)
         self.canevassplash.create_window(420, 450, window=self.btnreset, width=200, height=30)
-        self.canevassplash.create_window(120, 450, window=self.btncadretest, width=200, height=30)
 
         # ## NOTES : ceci est un exemple pour ajouter des options au cadresplash
         # ## POUR CHOIX CIVILISATION, 4 OPTIONS
@@ -118,9 +122,9 @@ class Vue():
         # ## FIN de l'exemple des choix de civilisations
 
         # on met à jour les champs et widgets
-        #self.update_splash(testdispo)
         # on retourne ce cadre pour l'insérer dans le dictionnaires des cadres
         return self.cadresplash
+
     def montrercadretest(self):
         self.cadretest=RTS_vuecadres.Cadre_test(self)
         print(self.cadretest.nom)

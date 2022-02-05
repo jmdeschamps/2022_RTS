@@ -20,7 +20,7 @@ module principal (main), essentiellement le controleur, dans l'architecture M-V-
 
 class Controleur():
     def __init__(self):
-        self.civilisation="1"
+        #self.civilisation="1"
         # indique si on 'cree' la partie, c'est alors nous qui pourront Demarre la pertie
         self.egoserveur=0 
         # le no de cadre pour assurer la syncronisation avec les autres participants
