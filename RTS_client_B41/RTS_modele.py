@@ -1040,6 +1040,9 @@ class Partie():
         self.creer_biotopes()
         self.creer_population(mondict)
 
+    def calc_stats(self):
+        pass
+
     def trouver_valeurs(self):
         vals=Partie.valeurs
         return vals
