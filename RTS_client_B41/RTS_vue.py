@@ -592,13 +592,14 @@ class Vue():
             if "Ouvrier" == mestags[4]:
                 self.action.persochoisi.append(mestags[2])
                 self.action.afficher_commande_perso()
+        ######
             else:
                 self.action.persochoisi.append(mestags[2])
 
         # BUG quand on attaque
-        elif self.action.persochoisi!= []:
-            self.action.ciblechoisi=mestags
-            self.action.attaquer()
+        # elif self.action.persochoisi!= []:
+        #     self.action.ciblechoisi=mestags
+        #     self.action.attaquer()
 
     # Methodes pour multiselect
     def debuter_multiselection(self,evt):
@@ -647,7 +648,7 @@ class Vue():
 
     def indiquer_position(self,evt):
         tag=self.canevas.gettags(CURRENT)
-        if not tag:
+        if not tag and self.action.persochoisi:
             x,y=(self.canevas.canvasx(evt.x),self.canevas.canvasy(evt.y))
             self.action.position=[x,y]
             self.action.deplacer()
@@ -692,7 +693,7 @@ class Vue():
 
     def construire_batiment(self,evt):
         mestags=self.canevas.gettags(CURRENT)
-        if not mestags:
+        if not mestags and self.action.persochoisi and self.action.prochaineaction:
             pos=(self.canevas.canvasx(evt.x),self.canevas.canvasy(evt.y))
             self.action.construire_batiment(pos)
 
