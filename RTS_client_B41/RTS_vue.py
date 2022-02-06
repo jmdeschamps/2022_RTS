@@ -227,7 +227,7 @@ class Vue():
 
         self.cadrejeuinfo.grid(row=0,column=0,sticky=E+W,columnspan=2)
 
-    def creer_cadre_jeu_actiocadreappn(self):
+    def creer_cadre_jeu_action(self):
         # Ajout du cadre d'action a droite pour identifier les objets permettant les commandes du joueur
         self.cadreaction=Frame(self.cadrepartie)
         self.cadreaction.grid(row=0,column=1,sticky=N+S)
@@ -272,6 +272,9 @@ class Vue():
         self.canevas.tag_bind("baie", "<Button-1>", self.ramasser_ressource)
         self.canevas.tag_bind("eau", "<Button-1>", self.ramasser_ressource)
         self.canevas.tag_bind("daim", "<Button-1>", self.chasser_ressource)
+
+
+        self.canevas.bind("<Control-Button-1>", self.parent.montrer_stats)
 
     def defiler_vertical(self, evt):
         rep = self.scrollV.get()[0]

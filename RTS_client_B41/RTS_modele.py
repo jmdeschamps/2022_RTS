@@ -861,6 +861,13 @@ class Joueur():
                         "abandonner": self.abandonner}
         # on va creer une maison comme centre pour le joueur
         self.creer_point_origine(x, y)
+    def get_stats(self):
+        total=0
+        for i in self.persos:
+            total+= len(self.persos[i])
+        for i in self.batiments:
+            total+= len(self.batiments[i])
+        return total
 
     def annoncer_mort(self, perso):
         self.persos[perso.montype].pop(perso.id)
@@ -1008,6 +1015,7 @@ class Partie():
         self.delaiprochaineaction = 20
 
         self.joueurs = {}
+        ###  reference vers les classes appropriées
         self.classesbatiments = {"maison": Maison,
                                  "caserne": Caserne,
                                  "abri": Abri,
@@ -1029,8 +1037,8 @@ class Partie():
                          "eau": {},
                          "marais": {},
                          "baie": {}}
-        self.regions = {}
 
+        self.regions = {}
         self.regionstypes = [["arbre", 50, 20, 5, "forest green"],
                              ["eau", 10, 20, 12, "light blue"],
                              ["marais", 3, 8, 8, "DarkSeaGreen3"],
@@ -1041,7 +1049,12 @@ class Partie():
         self.creer_population(mondict)
 
     def calc_stats(self):
-        pass
+        total=0
+        for i in self.joueurs:
+            total+=self.joueurs[i].get_stats()
+        for i in self.biotopes:
+            total+=len(self.biotopes[i])
+        self.montrer_msg_general(str(total))
 
     def trouver_valeurs(self):
         vals=Partie.valeurs
@@ -1208,16 +1221,17 @@ class Partie():
         for i in self.joueurs.keys():
             self.joueurs[i].jouer_prochain_coup()
 
-        if self.msggeneral:
+        if self.msggeneral and "cadre" not in self.msggeneral:
             self.msggeneralcompteur += 1
             if self.msggeneralcompteur == self.msggeneraldelai:
                 self.msggeneral = ""
                 self.msggeneralcompteur = 0
+        else:
+            t=int(time.time())
+            msg="cadre: "+str(cadrecourant)+" - secs: "+str(t-self.debut)
+            self.msggeneral=msg
 
         self.faire_action_partie()
-        t=int(time.time())
-        msg="cadre: "+str(cadrecourant)+" - secs: "+str(t-self.debut)
-        self.msggeneral=msg
 
     def faire_action_partie(self):
         if self.delaiprochaineaction == 0:
