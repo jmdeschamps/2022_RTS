@@ -134,7 +134,6 @@ class Vue():
     #     self.cadretest.grid(in_=self.canevas,row=0,column=0)
     ########## fin fonction test pour auttre module
 
-
     ######## le lobby (où on attend les inscriptions)
     def creer_cadre_lobby(self):
         # le cadre lobby, pour isncription des autres joueurs, remplace le splash
