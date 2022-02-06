@@ -31,7 +31,7 @@ class Controleur():
 
         self.prochainsplash = None  # requis pour sortir de cette boucle et passer au lobby du jeu
         self.onjoue = 1  # indicateur que le jeu se poursuive - sinon on attend qu'un autre joueur nous rattrape
-        self.maindelai = 50  # delai en ms de la boucle de jeu
+        self.maindelai = 30  # delai en ms de la boucle de jeu
         self.moduloappeler_serveur = 5  # frequence des appel au serveur, evite de passer son temps a communiquer avec le serveur
         self.urlserveur = "http://127.0.0.1:8000"  # 127.0.0.1 pour tests,"http://votreidentifiant.pythonanywhere.com" pour web
 
