@@ -227,7 +227,6 @@ class Controleur():
         vals = self.modele.trouver_valeurs()
         return vals
 
-
 if __name__ == '__main__':
     print("Bienvenue au RTS")
     c = Controleur()

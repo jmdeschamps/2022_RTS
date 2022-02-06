@@ -21,11 +21,9 @@ class Vue():
         self.cadrechaton=0
         self.textchat=""
         self.infohud={}
-        # # minicarte
         self.tailleminicarte=220
 
         self.cadreactif=None
-
         # # objet pour cumuler les manipulations du joueur pour generer une action de jeu
         self.action=Action(self)
 
@@ -50,7 +48,6 @@ class Vue():
 
 
 ####### INTERFACES GRAPHIQUES
-
     def changer_cadre(self,nomcadre: str):
         cadre=self.cadres[nomcadre]
         if self.cadreactif:
@@ -59,7 +56,6 @@ class Vue():
         self.cadreactif.pack(expand=1,fill=BOTH)
 
     ###### LES CADRES ############################################################################################
-    # Appel de la création des divers cadre
     def creer_cadres(self, urlserveur: str, monnom: str, testdispo: str):
         self.cadres["splash"] = self.creer_cadre_splash(urlserveur, monnom, testdispo)
         self.cadres["lobby"] = self.creer_cadre_lobby()
@@ -78,7 +74,7 @@ class Vue():
         self.etatdujeu = Label(text=testdispo, font=("Arial", 18), borderwidth=2, relief=RIDGE)
         self.nomsplash = Entry(font=("Arial", 14))
         self.urlsplash = Entry(font=("Arial", 14))
-        self.btnurlconnect = Button(text="Connecter", font=("Arial", 12), command=self.boucler_sur_splash)
+        self.btnurlconnect = Button(text="Connecter", font=("Arial", 12), command=self.connecter_serveur)
         # on insère les infos par défaut (nom url) et reçu au démarrage (dispo)
         self.nomsplash.insert(0, monnom)
         self.urlsplash.insert(0, urlserveur)
@@ -87,7 +83,6 @@ class Vue():
         self.canevassplash.create_window(320, 200, window=self.nomsplash, width=400, height=30)
         self.canevassplash.create_window(240, 250, window=self.urlsplash, width=200, height=30)
         self.canevassplash.create_window(420, 250, window=self.btnurlconnect, width=100, height=30)
-
         # les boutons d'actions
         self.btncreerpartie = Button(text="Creer partie", font=("Arial", 12), state=DISABLED, command=self.creer_partie)
         self.btninscrirejoueur = Button(text="Inscrire joueur", font=("Arial", 12), state=DISABLED, command=self.inscrire_joueur)
@@ -97,6 +92,7 @@ class Vue():
         #self.btncadretest = Button(text="Cadre test", font=("Arial", 9),  command=self.montrercadretest)
         # on place les autres boutons
         # self.canevassplash.create_window(120, 450, window=self.btncadretest, width=200, height=30)
+        ##############
 
         # on place les autres boutons
         self.canevassplash.create_window(420, 350, window=self.btncreerpartie, width=200, height=30)
@@ -124,14 +120,14 @@ class Vue():
         # on retourne ce cadre pour l'insérer dans le dictionnaires des cadres
         return self.cadresplash
 
-    # cette fonction la creation d'un frame par un autre module - pour fin de test uniquement
+    ###########  cette fonction la creation d'un frame par un autre module - pour fin de test uniquement
     def montrercadretest(self):
         self.cadretest=RTS_vuecadres.Cadre_test(self)
         print(self.cadretest.nom)
         self.cadretest.grid(in_=self.canevas,row=0,column=0)
-    # fin fonction test pour auttre module
+    ########## fin fonction test pour auttre module
 
-    def boucler_sur_splash(self):
+    def connecter_serveur(self):
         self.btninscrirejoueur.config(state=NORMAL)
         self.btncreerpartie.config(state=NORMAL)
         self.btnreset.config(state=NORMAL)
@@ -243,7 +239,6 @@ class Vue():
         # les widgets
         self.canevasaction.create_text(100,30,text=self.parent.monnom,font=("arial",18,"bold"),anchor=S,tags=("nom"))
 
-
         # minicarte
         self.minicarte=Canvas(self.cadreaction,width=self.tailleminicarte,height=self.tailleminicarte,bg="tan1",highlightthickness=0)
         self.minicarte.grid(row=2,column=0,columnspan=2)
@@ -303,7 +298,6 @@ class Vue():
         self.canevas.bind("<MouseWheel>", self.OnMouseWheel)
         self.canevas.bind("<Control-MouseWheel>", self.OnCtrlMouseWheel)
 
-
         # soit aux dessins, en vertu de leur tag (propriétés des objets dessinés)
         # ALL va réagir à n'importe quel dessin
         # sinon on spécifie un tag particulier, exemple avec divers tag, attaché par divers événements
@@ -317,26 +311,20 @@ class Vue():
         self.canevas.tag_bind("daim","<Button-1>",self.chasser_ressource)
 
     def OnMouseWheel(self, evt):
-        print(evt.keysym)
         rep=self.scrollV.get()[0]
         if evt.delta<0:
-            rep=rep+0.02
+            rep=rep+0.01
         else:
-            rep=rep-0.02
+            rep=rep-0.01
         self.canevas.yview_moveto(rep)
 
     def OnCtrlMouseWheel(self, evt):
-        print("IN X")
         rep = self.scrollH.get()[0]
         if evt.delta < 0:
             rep = rep + 0.02
         else:
             rep = rep - 0.02
         self.canevas.xview_moveto(rep)
-
-        # cette méthode sert à changer le cadre (Frame) actif de la fenêtre, on n'a qu'à fournir le cadre requis
-
-
 
 ##### FONCTION DU SPLASH #########################################################################
     def creer_partie(self):
@@ -473,9 +461,6 @@ class Vue():
                                   tags=("statique",self.parent.monnom,batiment.id,"batiment",batiment.montype,""))
 
         x0, y0, x2, y2 = self.canevas.bbox(chose)
-
-
-
 
         couleurs={0:"",
                   1:"light green",
