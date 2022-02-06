@@ -46,8 +46,7 @@ class Controleur():
         self.boucler_sur_splash()
 
     # a partir du splash
-    def creer_partie(self, nom, urljeu):
-        # on quitte le splash et sa boucle
+    def creer_partie(self, nom):
         if self.prochainsplash:  # si on est dans boucler_sur_splash, on doit supprimer le prochain appel
             self.vue.root.after_cancel(self.prochainsplash)
             self.prochainsplash = None
