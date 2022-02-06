@@ -21,11 +21,9 @@ class Vue():
         self.cadrechaton=0
         self.textchat=""
         self.infohud={}
-        # # minicarte
         self.tailleminicarte=220
 
         self.cadreactif=None
-
         # # objet pour cumuler les manipulations du joueur pour generer une action de jeu
         self.action=Action(self)
 
@@ -50,7 +48,6 @@ class Vue():
 
 
 ####### INTERFACES GRAPHIQUES
-
     def changer_cadre(self,nomcadre: str):
         cadre=self.cadres[nomcadre]
         if self.cadreactif:
@@ -59,7 +56,6 @@ class Vue():
         self.cadreactif.pack(expand=1,fill=BOTH)
 
     ###### LES CADRES ############################################################################################
-    # Appel de la création des divers cadre
     def creer_cadres(self, urlserveur: str, monnom: str, testdispo: str):
         self.cadres["splash"] = self.creer_cadre_splash(urlserveur, monnom, testdispo)
         self.cadres["lobby"] = self.creer_cadre_lobby()
@@ -74,11 +70,10 @@ class Vue():
         self.canevassplash.pack()
 
         # creation ds divers widgets (champ de texte 'Entry' et boutons cliquables (Button)
-        # les champs et
         self.etatdujeu = Label(text=testdispo, font=("Arial", 18), borderwidth=2, relief=RIDGE)
         self.nomsplash = Entry(font=("Arial", 14))
         self.urlsplash = Entry(font=("Arial", 14))
-        self.btnurlconnect = Button(text="Connecter", font=("Arial", 12), command=self.boucler_sur_splash)
+        self.btnurlconnect = Button(text="Connecter", font=("Arial", 12), command=self.connecter_serveur)
         # on insère les infos par défaut (nom url) et reçu au démarrage (dispo)
         self.nomsplash.insert(0, monnom)
         self.urlsplash.insert(0, urlserveur)
@@ -87,23 +82,17 @@ class Vue():
         self.canevassplash.create_window(320, 200, window=self.nomsplash, width=400, height=30)
         self.canevassplash.create_window(240, 250, window=self.urlsplash, width=200, height=30)
         self.canevassplash.create_window(420, 250, window=self.btnurlconnect, width=100, height=30)
-
         # les boutons d'actions
         self.btncreerpartie = Button(text="Creer partie", font=("Arial", 12), state=DISABLED, command=self.creer_partie)
         self.btninscrirejoueur = Button(text="Inscrire joueur", font=("Arial", 12), state=DISABLED, command=self.inscrire_joueur)
         self.btnreset = Button(text="Reinitialiser partie", font=("Arial", 9), state=DISABLED, command=self.reset_partie)
-
-        ### NOTE le bouton suivant permet de générer un Frame issu d'un autre module et l'intégrer à la vue directement
-        #self.btncadretest = Button(text="Cadre test", font=("Arial", 9),  command=self.montrercadretest)
-        # on place les autres boutons
-        # self.canevassplash.create_window(120, 450, window=self.btncadretest, width=200, height=30)
 
         # on place les autres boutons
         self.canevassplash.create_window(420, 350, window=self.btncreerpartie, width=200, height=30)
         self.canevassplash.create_window(420, 400, window=self.btninscrirejoueur, width=200, height=30)
         self.canevassplash.create_window(420, 450, window=self.btnreset, width=200, height=30)
 
-        # ## NOTES : ceci est un exemple pour ajouter des options au cadresplash
+        ############ ## NOTES : ceci est un exemple pour ajouter des options au cadresplash
         # ## POUR CHOIX CIVILISATION, 4 OPTIONS
         # # LA VARIABLE DONT LA VALEUR CHANGERA AU FIL DES CLICK
         # self.valciv = StringVar(self.cadresplash, "1")
@@ -119,24 +108,34 @@ class Vue():
         # self.canevassplash.create_window(220, 410, window=radciv3, width=180, height=30)
         # self.canevassplash.create_window(220, 440, window=radciv4, width=180, height=30)
         # self.canevassplash.create_window(220, 470, window=radciv5, width=180, height=30)
-        # ## FIN de l'exemple des choix de civilisations
+        # ## ##########    FIN de l'exemple des choix de civilisations
+
+
+        ############# NOTE le bouton suivant permet de générer un Frame issu d'un autre module et l'intégrer à la vue directement
+        #self.btncadretest = Button(text="Cadre test", font=("Arial", 9),  command=self.montrercadretest)
+        # on place les autres boutons
+        # self.canevassplash.create_window(120, 450, window=self.btncadretest, width=200, height=30)
+        ##############
 
         # on retourne ce cadre pour l'insérer dans le dictionnaires des cadres
         return self.cadresplash
 
-    # cette fonction la creation d'un frame par un autre module - pour fin de test uniquement
-    def montrercadretest(self):
-        self.cadretest=RTS_vuecadres.Cadre_test(self)
-        print(self.cadretest.nom)
-        self.cadretest.grid(in_=self.canevas,row=0,column=0)
-    # fin fonction test pour auttre module
-
-    def boucler_sur_splash(self):
+    def connecter_serveur(self):
         self.btninscrirejoueur.config(state=NORMAL)
         self.btncreerpartie.config(state=NORMAL)
         self.btnreset.config(state=NORMAL)
-        self.parent.boucler_sur_splash()
+        url_serveur=self.urlsplash.get()
+        self.parent.connecter_serveur(url_serveur)
 
+    ###########  cette fonction la creation d'un frame par un autre module - pour fin de test uniquement
+    # def montrercadretest(self):
+    #     self.cadretest=RTS_vuecadres.Cadre_test(self)
+    #     print(self.cadretest.nom)
+    #     self.cadretest.grid(in_=self.canevas,row=0,column=0)
+    ########## fin fonction test pour auttre module
+
+
+    ######## le lobby (où on attend les inscriptions)
     def creer_cadre_lobby(self):
         # le cadre lobby, pour isncription des autres joueurs, remplace le splash
         self.cadrelobby=Frame(self.cadreapp)
@@ -154,6 +153,7 @@ class Vue():
         # on retourne ce cadre pour l'insérer dans le dictionnaires des cadres
         return self.cadrelobby
 
+    ### cadre de jeu : inclus aire de jeu, le HUD, le cadre_jeu_action
     def creer_cadre_jeu(self):
         # le cadre principal du jeu, remplace le Lobby
         self.cadrepartie=Frame(self.cadreapp,bg="green",width=400,height=400)
@@ -242,7 +242,6 @@ class Vue():
         # les widgets
         self.canevasaction.create_text(100,30,text=self.parent.monnom,font=("arial",18,"bold"),anchor=S,tags=("nom"))
 
-
         # minicarte
         self.minicarte=Canvas(self.cadreaction,width=self.tailleminicarte,height=self.tailleminicarte,bg="tan1",highlightthickness=0)
         self.minicarte.grid(row=2,column=0,columnspan=2)
@@ -252,6 +251,46 @@ class Vue():
         self.canevasaction.rowconfigure(0, weight=1)
         self.cadreaction.rowconfigure(0, weight=1)
 
+    def connecter_event(self):
+        # actions de clics sur la carte
+        self.canevas.bind("<Button-1>", self.annuler_action)
+        self.canevas.bind("<Button-2>", self.indiquer_position)
+        self.canevas.bind("<Button-3>", self.construire_batiment)
+        # faire une multiselection
+        self.canevas.bind("<Shift-Button-1>", self.debuter_multiselection)
+        self.canevas.bind("<Shift-B1-Motion>", self.afficher_multiselection)
+        self.canevas.bind("<Shift-ButtonRelease-1>", self.terminer_multiselection)
+        # scroll avec roulette
+        self.canevas.bind("<MouseWheel>", self.defiler_vertical)
+        self.canevas.bind("<Control-MouseWheel>", self.defiler_horizon)
+
+        # acgtions liées aux objets dessinés par tag
+        self.canevas.tag_bind("batiment", "<Button-1>", self.creer_entite)
+        self.canevas.tag_bind("perso", "<Button-1>", self.ajouter_selection)
+        self.canevas.tag_bind("arbre", "<Button-1>", self.ramasser_ressource)
+        self.canevas.tag_bind("aureus", "<Button-1>", self.ramasser_ressource)
+        self.canevas.tag_bind("roche", "<Button-1>", self.ramasser_ressource)
+        self.canevas.tag_bind("baie", "<Button-1>", self.ramasser_ressource)
+        self.canevas.tag_bind("eau", "<Button-1>", self.ramasser_ressource)
+        self.canevas.tag_bind("daim", "<Button-1>", self.chasser_ressource)
+
+    def defiler_vertical(self, evt):
+        rep = self.scrollV.get()[0]
+        if evt.delta < 0:
+            rep = rep + 0.01
+        else:
+            rep = rep - 0.01
+        self.canevas.yview_moveto(rep)
+
+    def defiler_horizon(self, evt):
+        rep = self.scrollH.get()[0]
+        if evt.delta < 0:
+            rep = rep + 0.02
+        else:
+            rep = rep - 0.02
+        self.canevas.xview_moveto(rep)
+
+    ### cadre qui s'Affichera par-dessus le canevas de jeu pour l'aide
     def creer_aide(self):
         self.cadreaide=Frame(self.canevas)
         self.scrollVaide=Scrollbar(self.cadreaide,orient=VERTICAL)
@@ -266,10 +305,11 @@ class Vue():
         self.textaide.insert(END, monaide)
         self.textaide.config(state=DISABLED)
 
+    ### cadre qui affichera un chatbox
     def creer_chatter(self):
         self.cadrechat=Frame(self.canevas,bd=2,bg="orange")
         self.cadrechatlist=Frame(self.cadrechat)
-        # Make topLevelWindow remain on top until destroyed, or attribute changes.
+
         self.scrollVchat=Scrollbar(self.cadrechatlist,orient=VERTICAL)
         self.textchat=Listbox(self.cadrechatlist,width=30,height=6,
                             yscrollcommand = self.scrollVchat.set )
@@ -288,63 +328,12 @@ class Vue():
         self.entreechat.pack(expand=1,fill=X)
         self.cadreparler.pack(expand=1,fill=X)
 
-    def connecter_event(self):
-        # on attache (bind) desF événements soit aux objets eux même
-        self.canevas.bind("<Button-1>",self.annuler_action)
-        self.canevas.bind("<Button-3>",self.construire_batiment)
-        # faire une multiselection
-        self.canevas.bind("<Shift-Button-1>",self.debuter_multiselection)
-        self.canevas.bind("<Shift-B1-Motion>",self.afficher_multiselection)
-        self.canevas.bind("<Shift-ButtonRelease-1>",self.terminer_multiselection)
-
-        self.canevas.bind("<Button-2>",self.indiquer_position)
-
-        self.canevas.bind("<MouseWheel>", self.OnMouseWheel)
-        self.canevas.bind("<Control-MouseWheel>", self.OnCtrlMouseWheel)
-
-
-        # soit aux dessins, en vertu de leur tag (propriétés des objets dessinés)
-        # ALL va réagir à n'importe quel dessin
-        # sinon on spécifie un tag particulier, exemple avec divers tag, attaché par divers événements
-        self.canevas.tag_bind("batiment","<Button-1>",self.creer_entite)
-        self.canevas.tag_bind("perso","<Button-1>",self.ajouter_selection)
-        self.canevas.tag_bind("arbre","<Button-1>",self.ramasser_ressource)
-        self.canevas.tag_bind("aureus","<Button-1>",self.ramasser_ressource)
-        self.canevas.tag_bind("roche","<Button-1>",self.ramasser_ressource)
-        self.canevas.tag_bind("baie","<Button-1>",self.ramasser_ressource)
-        self.canevas.tag_bind("eau","<Button-1>",self.ramasser_ressource)
-        self.canevas.tag_bind("daim","<Button-1>",self.chasser_ressource)
-
-    def OnMouseWheel(self, evt):
-        print(evt.keysym)
-        rep=self.scrollV.get()[0]
-        if evt.delta<0:
-            rep=rep+0.02
-        else:
-            rep=rep-0.02
-        self.canevas.yview_moveto(rep)
-
-    def OnCtrlMouseWheel(self, evt):
-        print("IN X")
-        rep = self.scrollH.get()[0]
-        if evt.delta < 0:
-            rep = rep + 0.02
-        else:
-            rep = rep - 0.02
-        self.canevas.xview_moveto(rep)
-
-        # cette méthode sert à changer le cadre (Frame) actif de la fenêtre, on n'a qu'à fournir le cadre requis
-
-
-
-##### FONCTION DU SPLASH #########################################################################
+##### FONCTIONS DU SPLASH #########################################################################
     def creer_partie(self):
         nom=self.nomsplash.get()
-        ## ON VA LIRE LA VALEUR DE LA VARIABLE ASSOCIEE AU BTN RADION CHOISI
-        urljeu=self.urlsplash.get()
-        self.parent.creer_partie(nom,urljeu) # ,valciv)
+        self.parent.creer_partie(nom)
 
-    ###  METHODES POUR SPLASH ET LOBBY INSCRIPTION pour participer a une partie
+    ###  FONCTIONS POUR SPLASH ET LOBBY INSCRIPTION pour participer a une partie
     def update_splash(self,etat):
         if "attente" in etat or "courante" in etat:
             self.btncreerpartie.config(state=DISABLED)
@@ -361,12 +350,12 @@ class Vue():
         else:
             self.etatdujeu.config(text="ERREUR - un probleme est survenu")
 
-##### FONCTION DU LOBBY #############
+    ##### FONCTION DU LOBBY #############
     def update_lobby(self,dico):
         self.listelobby.delete(0,END)
         for i in dico:
             self.listelobby.insert(END,i[0])
-        if self.parent.egoserveur:
+        if self.parent.joueur_createur:
             self.btnlancerpartie.config(state=NORMAL)
 
     def inscrire_joueur(self):
@@ -380,7 +369,8 @@ class Vue():
     def reset_partie(self):
         rep=self.parent.reset_partie()
 
-    def initialiser_avec_modele(self):
+    def initialiser_avec_modele(self,modele):
+        self.modele=modele
         # on reassigne le nom final localement pour eviter
         # de toujours le requerir du parent
         self.monnom=self.parent.monnom
@@ -471,9 +461,6 @@ class Vue():
                                   tags=("statique",self.parent.monnom,batiment.id,"batiment",batiment.montype,""))
 
         x0, y0, x2, y2 = self.canevas.bbox(chose)
-
-
-
 
         couleurs={0:"",
                   1:"light green",
@@ -605,13 +592,14 @@ class Vue():
             if "Ouvrier" == mestags[4]:
                 self.action.persochoisi.append(mestags[2])
                 self.action.afficher_commande_perso()
+        ######
             else:
                 self.action.persochoisi.append(mestags[2])
 
         # BUG quand on attaque
-        elif self.action.persochoisi!= []:
-            self.action.ciblechoisi=mestags
-            self.action.attaquer()
+        # elif self.action.persochoisi!= []:
+        #     self.action.ciblechoisi=mestags
+        #     self.action.attaquer()
 
     # Methodes pour multiselect
     def debuter_multiselection(self,evt):
@@ -660,7 +648,7 @@ class Vue():
 
     def indiquer_position(self,evt):
         tag=self.canevas.gettags(CURRENT)
-        if not tag:
+        if not tag and self.action.persochoisi:
             x,y=(self.canevas.canvasx(evt.x),self.canevas.canvasy(evt.y))
             self.action.position=[x,y]
             self.action.deplacer()
@@ -682,30 +670,32 @@ class Vue():
         yl=self.canevas.winfo_height()
 
     def batir_artefact(self,evt):
+        # on obtient l'information du bouton de menu cliquer
         obj=evt.widget
-        if self.action.btnactif:
-            if self.action.btnactif != obj:
-                self.action.btnactif.config(bg="SystemButtonFace")
+        if self.action.btnactif: # si un autre bouton etait deja choisi
+            if self.action.btnactif != obj: # et qu'il est different du nouveau
+                self.action.btnactif.config(bg="SystemButtonFace") # change couleur pour deselection du precedent
         #test de cout a cet endroit
-        nomsorte=obj.cget("text")
+        nomsorte=obj.cget("text") # on utilise pour identifier la sorte de batiment à produire
         self.action.btnactif=obj
 
+        #on valide qu'on a assez de ressources pour construire
         vals=self.parent.trouver_valeurs()
-        print(vals)
         ok=1
         for k,val in self.modele.joueurs[self.monnom].ressources.items():
             if val<= vals[nomsorte][k]:
-                ok=0
+                ok=0 # on indique qu'on a PAS les ressources
                 break
         if ok:
             self.action.prochaineaction=obj.cget("text")
             obj.config(bg="lightgreen")
         else:
+            self.action.btnactif.config(bg="SystemButtonFace")
             print("VOUS N'AVEZ PAS ASSEZ DE",k)
 
     def construire_batiment(self,evt):
         mestags=self.canevas.gettags(CURRENT)
-        if not mestags:
+        if not mestags and self.action.persochoisi and self.action.prochaineaction:
             pos=(self.canevas.canvasx(evt.x),self.canevas.canvasy(evt.y))
             self.action.construire_batiment(pos)
 
@@ -727,19 +717,21 @@ class Vue():
                     pos=(self.canevas.canvasx(evt.x),self.canevas.canvasy(evt.y))
                     action=[self.parent.monnom,"creerperso",["ballista",mestags[4],mestags[2],pos]]
                 self.parent.actionsrequises.append(action)
-        elif self.action.persochoisi!= []:
-            self.action.ciblechoisi=mestags
-            self.action.attaquer()
+        ###### les ATTAQUES SUR BATIMENT INACTIFS
+        # elif self.action.persochoisi:
+        #     self.action.ciblechoisi=mestags
+        #     self.action.attaquer()
 
 # Singleton (mais pas automatique) sert a conserver les manipulations du joueur pour demander une action
+######   CET OBJET SERVIRA À CONSERVER LES GESTES ET INFOS REQUISES POUR PRODUIRE UNE ACTION DE JEU
 class Action():
     def __init__(self,parent):
         self.parent=parent
         self.persochoisi=[]
         self.ciblechoisi=None
         self.position=[]
-        self.btnactif=None
-        self.prochaineaction=None
+        self.btnactif=None  # le bouton choisi pour creer un batiment
+        self.prochaineaction=None # utiliser pour les batiments seulement
         self.widgetsactifs=[]
         self.chaton=0
         self.aideon=0
