@@ -181,7 +181,6 @@ class Vue():
         self.scrollH.config( command = self.canevas.xview)
         # on visualise utilisant grid (grille)
         # le grid avec 'sticky' indique que l'objet doit s'acroitre pour coller aux 'points cardinaux' (anglais)
-
         self.canevas.grid(row=1,column=0,sticky=N+S+E+W)
         self.scrollV.grid(row=1,column=1,sticky=N+S)
         self.scrollH.grid(row=2,column=0,sticky=E+W)
@@ -201,7 +200,7 @@ class Vue():
                       "Bois":None,
                       "Roche":None,
                       "Aureus":None}
-        # fonction interne uniquement pour reproduire chaque item d'info
+        # fonction interne uniquement pour reproduire chaque info de ressource
         def creer_champ_interne(listechamp):
             titre=Champ(self.cadrejeuinfo, text=i,bg="red",fg="white")
             varstr=StringVar()
@@ -210,24 +209,25 @@ class Vue():
             titre.pack(side=LEFT)
             donnee.pack(side=LEFT)
             self.infohud[i]=[varstr,donnee]
-
+        ## on l'appelle pour chaque chose de self.infohud
         for i in self.infohud.keys():
             creer_champ_interne(i)
 
         varstr=StringVar()
         varstr.set("")
-
+        ### champ supplémentaire pour afficher des messages...
         champmsg=Label(self.cadrejeuinfo, text="",fg="red")
         champmsg.pack(side=LEFT)
         self.infohud["msggeneral"]=[champmsg]
+
         self.btnchat=Button(self.cadrejeuinfo,text="Chat",command=self.action.chatter)
         self.btnaide=Button(self.cadrejeuinfo,text="Aide",command=self.action.aider)
-
         self.btnaide.pack(side=RIGHT)
         self.btnchat.pack(side=RIGHT)
+
         self.cadrejeuinfo.grid(row=0,column=0,sticky=E+W,columnspan=2)
 
-    def creer_cadre_jeu_action(self):
+    def creer_cadre_jeu_actiocadreappn(self):
         # Ajout du cadre d'action a droite pour identifier les objets permettant les commandes du joueur
         self.cadreaction=Frame(self.cadrepartie)
         self.cadreaction.grid(row=0,column=1,sticky=N+S)
