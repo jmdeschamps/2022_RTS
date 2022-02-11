@@ -650,16 +650,16 @@ class Ouvrier(Perso):
             batiment = self.parent.parent.classesbatiments[self.cible.sorte](self, self.cible.id, self.parent.couleur,
                                                                        self.cible.x, self.cible.y, self.cible.sorte)
             self.parent.batiments[self.cible.sorte][self.cible.id] = batiment
+            # ajout du if pour creation unique
+            if batiment.id in self.parent.batiments['siteconstruction']:
+                sitecons = self.parent.batiments['siteconstruction'].pop(batiment.id)
+                print(sitecons)
 
-            sitecons = self.parent.batiments['siteconstruction'].pop(batiment.id)
-            print(sitecons)
-
-            self.parent.installer_batiment(batiment)
+                self.parent.installer_batiment(batiment)
             if self.cible.sorte=="maison":
                 self.batimentmere=batiment
             self.cible=None
             self.actioncourante=None
-
 
     def construire_site_construction(self,site_construction):
         self.cibler(site_construction)
