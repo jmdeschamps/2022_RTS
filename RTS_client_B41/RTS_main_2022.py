@@ -208,7 +208,7 @@ class Controleur():
     def abandonner(self):
         action = [self.monnom, "abandonner", [self.monnom + ": J'ABANDONNE !"]]
         self.actionsrequises = action
-        self.vue.root.after(500, self.vue.root.destroy)
+        self.root.after(500, self.root.destroy)
 
     ############        VOTRE CODE AU BESOIN      ######################
     ### Placez vos fonctions 

@@ -3,6 +3,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter.simpledialog import *
+from tkinter.messagebox import *
 
 from typing import Type
 
@@ -36,7 +37,7 @@ class Vue():
         self.creer_cadres(urlserveur,monnom,testdispo)
         self.changer_cadre("splash")
 
-        # self.root.protocol("WM_DELETE_WINDOW", self.demanderabandon)
+        self.root.protocol("WM_DELETE_WINDOW", self.demander_abandon)
         # # sera charge apres l'initialisation de la partie, contient les donnees pour mettre l'interface a jour
         self.modele=None
         # # variable pour suivre le trace du multiselect
@@ -46,6 +47,10 @@ class Vue():
         self.images=chargerimages()
         self.gifs=chargergifs()
 
+    def demander_abandon(self):
+        rep=askokcancel("Vous voulez vraiment quitter?")
+        if rep:
+            self.root.after(500, self.root.destroy)
 
 ####### INTERFACES GRAPHIQUES
     def changer_cadre(self,nomcadre: str):

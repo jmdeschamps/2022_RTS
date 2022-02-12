@@ -1013,7 +1013,7 @@ class Partie():
         self.make_carte_case()
 
         self.delaiprochaineaction = 20
-
+        self.maxbaies=20000
         self.joueurs = {}
         ###  reference vers les classes appropriées
         self.classesbatiments = {"maison": Maison,
@@ -1235,12 +1235,13 @@ class Partie():
 
     def faire_action_partie(self):
         if self.delaiprochaineaction == 0:
-            self.produire_action()
-            self.delaiprochaineaction = random.randrange(20, 30)
+            if len(self.biotopes["baie"])<self.maxbaies:
+                self.produire_baies()
+            self.delaiprochaineaction = random.randrange(50, 100)
         else:
             self.delaiprochaineaction -= 1
 
-    def produire_action(self):
+    def produire_baies(self):
         typeressource = Baie.typeressource
         n = 1
         while n:
